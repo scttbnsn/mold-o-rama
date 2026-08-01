@@ -28,6 +28,7 @@ a{color:#0000ee}a:visited{color:#551a8b}a:hover{color:#ff2200}
     <a href="Gallery.dc.html" style="display:block;padding:3px 9px;border:2px outset #eee;background:#d4d0c8;color:#00008b;text-decoration:none;font:bold 12px Verdana,sans-serif">Photo Gallery</a>
     <a href="Submit.dc.html" style="display:block;padding:3px 9px;border:2px outset #eee;background:#d4d0c8;color:#00008b;text-decoration:none;font:bold 12px Verdana,sans-serif">Submit a Sighting</a>
     <a href="History.dc.html" style="display:block;padding:3px 9px;border:2px outset #eee;background:#d4d0c8;color:#00008b;text-decoration:none;font:bold 12px Verdana,sans-serif">History</a>
+    <a href="Guestbook.dc.html" style="display:block;padding:3px 9px;border:2px outset #eee;background:#d4d0c8;color:#00008b;text-decoration:none;font:bold 12px Verdana,sans-serif">Guestbook</a>
   </div>
   <sc-if value="{{ marqueeOn }}" hint-placeholder-val="{{ true }}">
   <div style="background:#000080;overflow:hidden;padding:4px 0;border-bottom:3px ridge #888">
@@ -75,7 +76,7 @@ a{color:#0000ee}a:visited{color:#551a8b}a:hover{color:#ff2200}
       <span style="display:inline-block;width:88px;height:31px;background:#c0c0c0;color:#000;font:bold 9px Verdana,sans-serif;text-align:center;padding-top:5px;border:2px outset #fff;box-sizing:border-box">Best viewed<br />800 x 600</span>
       <span style="display:inline-block;width:88px;height:31px;background:#ffdc00;color:#7a0000;font:bold 9px Verdana,sans-serif;text-align:center;padding-top:5px;border:1px solid #888;box-sizing:border-box">Made with<br />NOTEPAD.EXE</span>
     </div>
-    <div style="font:11px Verdana,sans-serif;color:#555;line-height:1.5">This is an unofficial fan page. Mold-A-Rama&#174; is a registered trademark of Mold-A-Rama Inc. &mdash; we're just fans who love hot plastic.<br />&#169; 2026 &#8226; last updated 08/01/26 &#8226; sign the tracker &#8226; drink your ovaltine</div>
+    <div style="font:11px Verdana,sans-serif;color:#555;line-height:1.5">This is an unofficial fan page. Mold-A-Rama&#174; is a registered trademark of Mold-A-Rama Inc. &mdash; we're just fans who love hot plastic.<br />&#169; 2026 &#8226; last updated 08/01/26 &#8226; sign the guestbook &#8226; drink your ovaltine</div>
   </div>
 </div>
 </x-dc>
@@ -83,6 +84,20 @@ a{color:#0000ee}a:visited{color:#551a8b}a:hover{color:#ff2200}
 class Component extends DCLogic {
   state = { count: null };
   componentDidMount() {
+    fetch('/api/counter', { method: 'POST' })
+      .then((res) => {
+        if (!res.ok) throw new Error('bad response');
+        return res.json();
+      })
+      .then((body) => {
+        if (!body || !body.ok) throw new Error('not ok');
+        this.setState({ count: body.count });
+      })
+      .catch(() => {
+        this.bumpLocalCount();
+      });
+  }
+  bumpLocalCount() {
     const start = this.props.visitorStart ?? 12057;
     let n = parseInt(localStorage.getItem('mor_count'), 10);
     if (isNaN(n) || n < start) n = start;

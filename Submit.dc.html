@@ -28,6 +28,7 @@ a{color:#0000ee}a:visited{color:#551a8b}a:hover{color:#ff2200}
     <a href="Gallery.dc.html" style="display:block;padding:3px 9px;border:2px outset #eee;background:#d4d0c8;color:#00008b;text-decoration:none;font:bold 12px Verdana,sans-serif">Photo Gallery</a>
     <span style="padding:3px 9px;border:2px inset #999;background:#ffffcc;font:bold 12px Verdana,sans-serif;color:#333">Submit a Sighting</span>
     <a href="History.dc.html" style="display:block;padding:3px 9px;border:2px outset #eee;background:#d4d0c8;color:#00008b;text-decoration:none;font:bold 12px Verdana,sans-serif">History</a>
+    <a href="Guestbook.dc.html" style="display:block;padding:3px 9px;border:2px outset #eee;background:#d4d0c8;color:#00008b;text-decoration:none;font:bold 12px Verdana,sans-serif">Guestbook</a>
   </div>
   <div data-screen-label="Submit Form" style="padding:16px 20px">
     <div style="font-family:'Comic Sans MS',cursive;font-size:26px;color:#b22222;margin-bottom:4px">&#128238; Submit a Sighting</div>
@@ -35,6 +36,11 @@ a{color:#0000ee}a:visited{color:#551a8b}a:hover{color:#ff2200}
     <sc-if value="{{ justSubmitted }}" hint-placeholder-val="{{ false }}">
       <div style="border:3px double #006400;background:#eaffea;padding:10px 12px;margin-bottom:12px;font:bold 13px Verdana,sans-serif;color:#006400">
         &#127881; SIGHTING RECEIVED!! Thank you for your service to the mold community. See it live on the <a href="Locations.dc.html">Machine Finder</a>.
+      </div>
+    </sc-if>
+    <sc-if value="{{ submitError }}" hint-placeholder-val="{{ false }}">
+      <div style="border:3px double #8b0000;background:#ffecec;padding:10px 12px;margin-bottom:12px;font:bold 13px Verdana,sans-serif;color:#8b0000">
+        &#9888; TRANSMISSION FAILED!! The tubes are clogged &#8212; try again in a minute.
       </div>
     </sc-if>
     <form onSubmit="{{ submit }}" style="border:3px outset #ccc;background:#ffffff;padding:14px 16px;display:grid;grid-template-columns:170px 1fr;gap:10px 12px;align-items:center;font:13px Verdana,sans-serif">
@@ -52,7 +58,7 @@ a{color:#0000ee}a:visited{color:#551a8b}a:hover{color:#ff2200}
         <div style="font:11px 'Courier New',monospace;color:#777;margin-top:4px">Also add it to the <a href="Gallery.dc.html">Photo Gallery</a>!</div>
       </div>
       <span></span>
-      <div><button type="submit" style="font:bold 13px Verdana,sans-serif;padding:6px 18px;border:3px outset #eee;background:#d4d0c8;cursor:pointer;display:inline-flex;align-items:center;gap:8px"><span style="font-size:26px;line-height:1">&#9993;</span> SEND IT IN!</button></div>
+      <div><button type="submit" disabled="{{ sending }}" style="font:bold 13px Verdana,sans-serif;padding:6px 18px;border:3px outset #eee;background:#d4d0c8;cursor:pointer;display:inline-flex;align-items:center;gap:8px"><span style="font-size:26px;line-height:1">&#9993;</span> {{ sendButtonLabel }}</button></div>
     </form>
     <sc-if value="{{ hasReports }}" hint-placeholder-val="{{ false }}">
       <div style="margin-top:14px;border:3px double #b22222;background:#fffbe6;padding:10px 12px">
@@ -75,7 +81,7 @@ a{color:#0000ee}a:visited{color:#551a8b}a:hover{color:#ff2200}
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  state = { reports: [], justSubmitted: false };
+  state = { reports: [], justSubmitted: false, sending: false, submitError: false };
   componentDidMount() {
     try {
       const s = JSON.parse(localStorage.getItem('mor_sightings') || '[]');
@@ -84,24 +90,41 @@ class Component extends DCLogic {
   }
   save(reports, justSubmitted) {
     localStorage.setItem('mor_sightings', JSON.stringify(reports));
-    this.setState({ reports, justSubmitted });
+    this.setState({ reports, justSubmitted, sending: false, submitError: false });
   }
   renderVals() {
     return {
       justSubmitted: this.state.justSubmitted,
+      submitError: this.state.submitError,
+      sending: this.state.sending,
+      sendButtonLabel: this.state.sending ? 'SENDING...' : 'SEND IT IN!',
       hasReports: this.state.reports.length > 0,
       reports: this.state.reports.map((r, i) => ({ ...r,
         remove: () => this.save(this.state.reports.filter((_, j) => j !== i), false) })),
-      submit: (e) => {
+      submit: async (e) => {
         e.preventDefault();
+        if (this.state.sending) return;
         const f = e.target.elements;
         const rep = {
           venue: f.venue.value.trim(), city: f.city.value.trim(),
           molds: f.molds.value.trim() || '(no details)', name: f.name.value.trim() || 'anonymous mold-head'
         };
         if (!rep.venue || !rep.city) return;
-        this.save([...this.state.reports, rep], true);
-        e.target.reset();
+        const form = e.target;
+        this.setState({ sending: true, submitError: false });
+        try {
+          const res = await fetch('/api/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(rep)
+          });
+          const body = await res.json().catch(() => ({}));
+          if (!res.ok || !body.ok) throw new Error((body && body.error) || 'submit failed');
+          this.save([...this.state.reports, rep], true);
+          form.reset();
+        } catch (err) {
+          this.setState({ sending: false, submitError: true });
+        }
       }
     };
   }
