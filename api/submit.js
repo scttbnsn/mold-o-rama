@@ -1,3 +1,5 @@
+import { moderatePhoto } from './_moderate.js';
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.status(405).json({ ok: false, error: 'method' });
@@ -17,10 +19,18 @@ export default async function handler(req, res) {
       return;
     }
 
+    // A rejected photo never blocks the sighting - every submission still
+    // becomes an issue; the photo is just left out with a note.
     let photoUrl = null;
+    let photoRejectedReason = null;
     const photo = body.photo;
     if (typeof photo === 'string' && photo.indexOf('data:image/') === 0 && photo.length < 3_000_000) {
-      photoUrl = await uploadSightingPhoto(photo);
+      const verdict = await moderatePhoto(photo);
+      if (verdict.checked && !verdict.relevant) {
+        photoRejectedReason = verdict.reason || 'not Mold-O-Rama related';
+      } else {
+        photoUrl = await uploadSightingPhoto(photo);
+      }
     }
 
     const title = `Sighting: ${venue} (${city})`;
@@ -32,6 +42,8 @@ export default async function handler(req, res) {
     ];
     if (photoUrl) {
       bodyLines.push('**Photo:**', `![sighting photo](${photoUrl})`);
+    } else if (photoRejectedReason) {
+      bodyLines.push(`**Photo:** _left out by the robo-moderator (${photoRejectedReason})_`);
     }
     bodyLines.push('', '---', 'Submitted via the Mold-O-Rama fan site');
     const bodyMd = bodyLines.join('\n');
@@ -60,7 +72,12 @@ export default async function handler(req, res) {
 
     const issue = await ghRes.json();
     await cleanupSightingPhotoState();
-    res.status(200).json({ ok: true, url: issue.html_url });
+    const out = { ok: true, url: issue.html_url };
+    if (photoRejectedReason) {
+      out.photoDropped = true;
+      out.reason = photoRejectedReason;
+    }
+    res.status(200).json(out);
   } catch (err) {
     console.error('submit handler error:', err);
     res.status(500).json({ ok: false });

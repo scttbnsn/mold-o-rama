@@ -1,3 +1,5 @@
+import { moderatePhoto } from './_moderate.js';
+
 function isPlainObject(o) {
   return o !== null && typeof o === 'object' && !Array.isArray(o);
 }
@@ -12,6 +14,12 @@ function isValidSlotValue(v) {
     return true;
   }
   return false;
+}
+
+function imageOf(v) {
+  if (typeof v === 'string') return v;
+  if (isPlainObject(v) && typeof v.u === 'string') return v.u;
+  return null;
 }
 
 export default async function handler(req, res) {
@@ -48,6 +56,35 @@ export default async function handler(req, res) {
       }
       if (JSON.stringify(state).length > 4_000_000) {
         return res.status(413).json({ ok: false, error: 'state too large' });
+      }
+
+      // Only images not already in the stored state get the AI check, so
+      // rearranging existing slots costs nothing.
+      const existing = new Set();
+      try {
+        const cur = await fetch(
+          `${process.env.SUPABASE_URL}/rest/v1/photo_state?id=eq.1&select=state`,
+          { headers }
+        );
+        if (cur.ok) {
+          const rows = await cur.json();
+          const curState = (rows[0] && rows[0].state) || {};
+          for (const key in curState) {
+            const img = imageOf(curState[key]);
+            if (img) existing.add(img);
+          }
+        }
+      } catch (e) {}
+
+      const fresh = [];
+      for (const key in state) {
+        const img = imageOf(state[key]);
+        if (img && !existing.has(img)) fresh.push(img);
+      }
+      const verdicts = await Promise.all(fresh.map(moderatePhoto));
+      const rejected = verdicts.find((v) => v.checked && !v.relevant);
+      if (rejected) {
+        return res.status(400).json({ ok: false, error: 'photo rejected', reason: rejected.reason });
       }
 
       const url = `${process.env.SUPABASE_URL}/rest/v1/photo_state?id=eq.1`;

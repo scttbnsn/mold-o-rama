@@ -1,0 +1,8 @@
+{
+  "name": "mold-o-rama",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.115.0"
+  }
+}
