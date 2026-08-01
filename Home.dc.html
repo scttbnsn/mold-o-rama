@@ -80,7 +80,7 @@ a{color:#0000ee}a:visited{color:#551a8b}a:hover{color:#ff2200}
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;marqueeOn&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Retro extras&quot;},&quot;visitorStart&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:12057,&quot;min&quot;:0,&quot;max&quot;:999999,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Retro extras&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;marqueeOn&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Retro extras&quot;},&quot;visitorStart&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:0,&quot;min&quot;:0,&quot;max&quot;:999999,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Retro extras&quot;}}">
 class Component extends DCLogic {
   state = { count: null };
   componentDidMount() {
@@ -98,7 +98,7 @@ class Component extends DCLogic {
       });
   }
   bumpLocalCount() {
-    const start = this.props.visitorStart ?? 12057;
+    const start = this.props.visitorStart ?? 0;
     let n = parseInt(localStorage.getItem('mor_count'), 10);
     if (isNaN(n) || n < start) n = start;
     n += 1;
@@ -106,7 +106,7 @@ class Component extends DCLogic {
     this.setState({ count: n });
   }
   renderVals() {
-    const n = this.state.count ?? (this.props.visitorStart ?? 12057);
+    const n = this.state.count ?? (this.props.visitorStart ?? 0);
     return {
       marqueeOn: this.props.marqueeOn ?? true,
       counterDigits: String(n).padStart(6, '0').split('')
