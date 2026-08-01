@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0;background-color:#007878;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.06) 0 2px,transparent 2px 14px)}
+a{color:#0000ee}a:visited{color:#551a8b}a:hover{color:#ff2200}
+</style>
+<script src="./image-slot.js"></script>
+</helmet>
+<div style="width:810px;margin:18px auto;border:4px ridge #a8b4ba;background:#f1efe2;font-family:'Times New Roman',Times,serif;color:#1a1a1a">
+  <div data-screen-label="Header" style="background:#0b0b0b;padding:16px 10px 12px;text-align:center">
+    <div style="color:#e8e8e8;font-family:Verdana,sans-serif;font-size:11px;letter-spacing:4px;margin-bottom:6px">NOW YOU CAN ADMIRE THE AMAZING</div>
+    <div style="font-family:Impact,'Arial Black',sans-serif;font-size:52px;letter-spacing:2px;line-height:1"><span style="color:#4f9dff">M</span><span style="color:#ff4136">O</span><span style="color:#ffdc00">L</span><span style="color:#4f9dff">D</span><span style="color:#e8e8e8">-</span><span style="color:#ff4136">O</span><span style="color:#e8e8e8">-</span><span style="color:#ffdc00">R</span><span style="color:#4f9dff">A</span><span style="color:#ff4136">M</span><span style="color:#ffdc00">A</span></div>
+    <div style="color:#ffdc00;font-family:Verdana,sans-serif;font-size:11px;letter-spacing:3px;margin-top:8px">&#9733; THE UNOFFICIAL FAN PAGE &#9733; PHOTO GALLERY &#9733;</div>
+  </div>
+  <div data-screen-label="Nav" style="display:flex;gap:4px;padding:6px;background:#c0c0c0;border-top:2px solid #fff;border-bottom:3px ridge #888;flex-wrap:wrap">
+    <a href="Home.dc.html" style="display:block;padding:3px 9px;border:2px outset #eee;background:#d4d0c8;color:#00008b;text-decoration:none;font:bold 12px Verdana,sans-serif">Home</a>
+    <a href="Locations.dc.html" style="display:block;padding:3px 9px;border:2px outset #eee;background:#d4d0c8;color:#00008b;text-decoration:none;font:bold 12px Verdana,sans-serif">Machine Finder</a>
+    <a href="Tracker.dc.html" style="display:block;padding:3px 9px;border:2px outset #eee;background:#d4d0c8;color:#00008b;text-decoration:none;font:bold 12px Verdana,sans-serif">Mold Tracker</a>
+    <span style="padding:3px 9px;border:2px inset #999;background:#ffffcc;font:bold 12px Verdana,sans-serif;color:#333">Photo Gallery</span>
+    <a href="Submit.dc.html" style="display:block;padding:3px 9px;border:2px outset #eee;background:#d4d0c8;color:#00008b;text-decoration:none;font:bold 12px Verdana,sans-serif">Submit a Sighting</a>
+    <a href="History.dc.html" style="display:block;padding:3px 9px;border:2px outset #eee;background:#d4d0c8;color:#00008b;text-decoration:none;font:bold 12px Verdana,sans-serif">History</a>
+  </div>
+  <div data-screen-label="Gallery" style="padding:16px 20px">
+    <div style="font-family:'Comic Sans MS',cursive;font-size:26px;color:#b22222;margin-bottom:4px">&#128247; The Photo Gallery</div>
+    <p style="margin:0 0 14px;font-size:15px;line-height:1.5">Machines in the wild, spotted by fans like YOU. Got a shot of a machine or your mold haul? Drag your photo right onto an empty frame below, then <a href="Submit.dc.html">tell us where you found it</a>.</p>
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px">
+      <div style="border:3px outset #ccc;background:#fff;padding:8px">
+        <img src="uploads/mar_car.png" alt="Mold-A-Rama machine with 1914 Antique Automobile mold" style="width:100%;height:340px;object-fit:cover;object-position:center 20%;display:block" />
+        <div style="font:11px 'Courier New',monospace;margin-top:6px;color:#333;line-height:1.5"><b>&#9733; 1914 ANTIQUE AUTOMOBILE machine</b><br />Powder blue and running strong. Note the $5.00 sticker &mdash; inflation comes for us all.</div>
+      </div>
+      <div style="border:3px outset #ccc;background:#fff;padding:8px">
+        <img src="uploads/mar_wm.png" alt="Mold-A-Rama machine with 1952 Wienermobile mold" style="width:100%;height:340px;object-fit:cover;object-position:center 20%;display:block" />
+        <div style="font:11px 'Courier New',monospace;margin-top:6px;color:#333;line-height:1.5"><b>&#9733; 1952 WIENERMOBILE machine</b><br />The Henry Ford's crown jewel. That little orange hot dog car is worth every penny.</div>
+      </div>
+      <div style="border:3px outset #ccc;background:#fff;padding:8px">
+        <div style="height:340px"><image-slot id="fan1" shape="rect" placeholder="Drop a machine photo here"></image-slot></div>
+        <div style="font:11px 'Courier New',monospace;margin-top:6px;color:#777">&#9733; YOUR PHOTO HERE &mdash; drag &amp; drop!</div>
+      </div>
+      <div style="border:3px outset #ccc;background:#fff;padding:8px">
+        <div style="height:340px"><image-slot id="fan2" shape="rect" placeholder="Drop a mold haul photo here"></image-slot></div>
+        <div style="font:11px 'Courier New',monospace;margin-top:6px;color:#777">&#9733; YOUR MOLD COLLECTION HERE &mdash; drag &amp; drop!</div>
+      </div>
+      <div style="border:3px outset #ccc;background:#fff;padding:8px">
+        <div style="height:340px"><image-slot id="fan3" shape="rect" placeholder="Drop a photo here"></image-slot></div>
+        <div style="font:11px 'Courier New',monospace;margin-top:6px;color:#777">&#9733; RESERVED FOR THE NEXT ROAD TRIP</div>
+      </div>
+      <div style="border:3px outset #ccc;background:#fff;padding:8px">
+        <div style="height:340px"><image-slot id="fan4" shape="rect" placeholder="Drop a photo here"></image-slot></div>
+        <div style="font:11px 'Courier New',monospace;margin-top:6px;color:#777">&#9733; RESERVED FOR YOUR RAREST FIND</div>
+      </div>
+    </div>
+  </div>
+  <div data-screen-label="Footer" style="border-top:4px ridge #a8b4ba;background:#dcd8cc;padding:10px 20px;text-align:center;font:11px Verdana,sans-serif;color:#555;line-height:1.5">
+    All photos remain property of their photographers. Please don't hotlink, it's rude.<br />This is an unofficial fan page. Mold-A-Rama&#174; is a registered trademark of Mold-A-Rama Inc.
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

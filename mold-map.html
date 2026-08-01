@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="https://unpkg.com/d3@7.9.0/dist/d3.min.js" integrity="sha384-CjloA8y00+1SDAUkjs099PVfnY2KmDC2BZnws9kh8D/lX1s46w6EPhpXdqMfjK6i" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js" integrity="sha384-Ukv1p/xTma6P4/2bY5KzWBw+ydSpXmhCMtyciIQVDJ1RmOxtCYNMF1uXT9T63H67" crossorigin="anonymous"></script>
+<style>
+body{margin:0;background:#f1efe2;font-family:Verdana,sans-serif}
+@keyframes pulse{0%,49%{opacity:1}50%,100%{opacity:.25}}
+.newdot{animation:pulse 1s step-start infinite}
+#legend{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(15,auto);grid-auto-flow:column;gap:2px 14px;padding:6px 10px 10px;font:11px 'Courier New',monospace;color:#1a1a1a}
+.key{display:flex;align-items:center;gap:6px}
+.swatch{width:10px;height:10px;border-radius:50%;border:1px solid #333;flex-shrink:0}
+</style>
+</head>
+<body>
+<svg id="map" width="770" height="420"></svg>
+<div style="display:flex;gap:14px;padding:2px 10px 0;font:bold 11px Verdana,sans-serif;align-items:center;flex-wrap:wrap">
+  <span class="key"><span class="swatch" style="background:#2266cc"></span> MIDWEST</span>
+  <span class="key"><span class="swatch" style="background:#cc2200"></span> SOUTH</span>
+  <span class="key"><span class="swatch" style="background:#1e8f1e"></span> FLORIDA</span>
+  <span class="key"><span class="swatch" style="background:#e69500"></span> OUT WEST</span>
+  <span style="color:#666;font-weight:normal">numbers run down each column &darr;</span>
+</div>
+<div id="legend"></div>
+<script>
+const regionColor = n => n <= 11 ? '#2266cc' : n <= 16 ? '#cc2200' : n <= 27 ? '#1e8f1e' : '#e69500';
+const venues = [
+  {n:1, name:'Brookfield Zoo — Brookfield, IL', lat:41.833, lon:-87.834},
+  {n:2, name:'Field Museum — Chicago, IL', lat:41.866, lon:-87.617},
+  {n:3, name:'Museum of Science & Industry — Chicago, IL', lat:41.790, lon:-87.583},
+  {n:4, name:'Volo Auto Museum — Volo, IL', lat:42.327, lon:-88.158},
+  {n:5, name:"Children's Museum of Indianapolis — IN", lat:39.810, lon:-86.157},
+  {n:6, name:'Indiana Dinosaur Museum — South Bend, IN', lat:41.700, lon:-86.360},
+  {n:7, name:'The Henry Ford — Dearborn, MI', lat:42.303, lon:-83.234},
+  {n:8, name:'Third Man Records — Detroit, MI', lat:42.331, lon:-83.063},
+  {n:9, name:"Children's Wonderland — Maumee, OH", lat:41.580, lon:-83.653},
+  {n:10, name:'Imagination Station — Toledo, OH', lat:41.650, lon:-83.537},
+  {n:11, name:'Milwaukee County Zoo — Milwaukee, WI', lat:43.033, lon:-88.038},
+  {n:12, name:'Memphis Zoo — Memphis, TN (NEW!)', lat:35.150, lon:-90.008, isNew:true},
+  {n:13, name:'Third Man Records — Nashville, TN', lat:36.135, lon:-86.776},
+  {n:14, name:'San Antonio Zoo — San Antonio, TX', lat:29.462, lon:-98.473},
+  {n:15, name:'Oklahoma City Zoo — Oklahoma City, OK', lat:35.523, lon:-97.472},
+  {n:16, name:'WonderWorks — Myrtle Beach, SC', lat:33.712, lon:-78.877},
+  {n:17, name:'Boggy Creek Airboat Adventures — Kissimmee, FL', lat:28.243, lon:-81.351},
+  {n:18, name:'Busch Gardens Tampa Bay — Tampa, FL', lat:28.037, lon:-82.421},
+  {n:19, name:'Central Florida Zoo — Sanford, FL', lat:28.826, lon:-81.320},
+  {n:20, name:'Gatorland — Orlando, FL', lat:28.360, lon:-81.407},
+  {n:21, name:'ICON Park — Orlando, FL', lat:28.443, lon:-81.468},
+  {n:22, name:'Manatee Viewing Center — Apollo Beach, FL', lat:27.792, lon:-82.400},
+  {n:23, name:'The Vinoy Resort — St. Petersburg, FL', lat:27.775, lon:-82.635},
+  {n:24, name:'Weeki Wachee Springs — Weeki Wachee, FL', lat:28.517, lon:-82.573},
+  {n:25, name:'WonderWorks — Orlando, FL', lat:28.434, lon:-81.471},
+  {n:26, name:'Zoo Miami — Miami, FL', lat:25.613, lon:-80.400},
+  {n:27, name:'ZooWorld — Panama City Beach, FL', lat:30.201, lon:-85.828},
+  {n:28, name:'Pinball Hall of Fame — Las Vegas, NV', lat:36.093, lon:-115.176},
+  {n:29, name:'Los Angeles Central Library — Los Angeles, CA', lat:34.050, lon:-118.255},
+  {n:30, name:'Space Needle — Seattle, WA', lat:47.620, lon:-122.349}
+];
+fetch('https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json')
+  .then(r => r.json())
+  .then(topology => {
+    const countries = topojson.feature(topology, topology.objects.countries);
+    const usa = countries.features.find(f => f.id === '840');
+    const svg = d3.select('#map');
+    const proj = d3.geoAlbersUsa().fitExtent([[10, 62], [760, 412]], usa);
+    const path = d3.geoPath(proj);
+    svg.append('path').attr('d', path(usa))
+      .attr('fill', '#cfe0c3').attr('stroke', '#5a6b52').attr('stroke-width', 1.2);
+    // spread the city clusters (Chicago, Toledo, Detroit, Orlando, Tampa Bay) so dots stay legible
+    const nudge = {2:[10,-8], 3:[16,6], 4:[-4,-12], 6:[6,10], 8:[12,8], 9:[-10,10], 10:[8,-8],
+                   17:[12,12], 19:[8,-10], 20:[-4,12], 21:[-8,-12], 25:[12,-2],
+                   18:[-8,-6], 22:[4,12], 23:[-12,8]};
+    for (const v of venues) {
+      const p = proj([v.lon, v.lat]);
+      if (!p) continue;
+      const [dx, dy] = nudge[v.n] || [0, 0];
+      const g = svg.append('g').attr('transform', `translate(${p[0]+dx},${p[1]+dy})`);
+      if (dx || dy) g.append('line').attr('x1', -dx).attr('y1', -dy).attr('x2', 0).attr('y2', 0).attr('stroke', '#666');
+      const c = g.append('circle').attr('r', 7.5).attr('fill', regionColor(v.n)).attr('stroke', '#111').attr('stroke-width', 1.5);
+      if (v.isNew) c.attr('class', 'newdot');
+      g.append('text').text(v.n).attr('text-anchor', 'middle').attr('dy', '3.5')
+        .attr('font-family', 'Verdana, sans-serif').attr('font-size', '8.5px')
+        .attr('font-weight', 'bold').attr('fill', '#fff');
+    }
+    svg.append('text').text('THE MOLD MAP OF AMERICA').attr('x', 385).attr('y', 30)
+      .attr('text-anchor', 'middle').attr('font-family', 'Courier New, monospace')
+      .attr('font-size', '15px').attr('font-weight', 'bold').attr('fill', '#00537a').attr('letter-spacing', '3px');
+    svg.append('text').text('30 spots where the machines still run').attr('x', 385).attr('y', 46)
+      .attr('text-anchor', 'middle').attr('font-family', 'Courier New, monospace')
+      .attr('font-size', '11px').attr('fill', '#555');
+    const legend = document.getElementById('legend');
+    for (const v of venues) {
+      const d = document.createElement('div');
+      d.className = 'key';
+      d.innerHTML = `<span class="swatch" style="background:${regionColor(v.n)}"></span> ${v.n}. ${v.name}`;
+      legend.appendChild(d);
+    }
+  });
+</script>
+</body>
+</html>

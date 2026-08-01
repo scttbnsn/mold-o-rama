@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0;background-color:#007878;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.06) 0 2px,transparent 2px 14px)}
+a{color:#0000ee}a:visited{color:#551a8b}a:hover{color:#ff2200}
+@keyframes mor-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+</style>
+</helmet>
+<div style="width:810px;margin:18px auto;border:4px ridge #a8b4ba;background:#f1efe2;font-family:'Times New Roman',Times,serif;color:#1a1a1a">
+  <div data-screen-label="Header" style="background:#0b0b0b;padding:16px 10px 12px;text-align:center">
+    <div style="color:#e8e8e8;font-family:Verdana,sans-serif;font-size:11px;letter-spacing:4px;margin-bottom:6px">NOW YOU CAN BROWSE THE AMAZING</div>
+    <div style="font-family:Impact,'Arial Black',sans-serif;font-size:52px;letter-spacing:2px;line-height:1"><span style="color:#4f9dff">M</span><span style="color:#ff4136">O</span><span style="color:#ffdc00">L</span><span style="color:#4f9dff">D</span><span style="color:#e8e8e8">-</span><span style="color:#ff4136">O</span><span style="color:#e8e8e8">-</span><span style="color:#ffdc00">R</span><span style="color:#4f9dff">A</span><span style="color:#ff4136">M</span><span style="color:#ffdc00">A</span></div>
+    <div style="color:#ffdc00;font-family:Verdana,sans-serif;font-size:11px;letter-spacing:3px;margin-top:8px">&#9733; THE UNOFFICIAL FAN PAGE &#9733; MACHINE FINDER &#9733;</div>
+  </div>
+  <div data-screen-label="Nav" style="display:flex;gap:4px;padding:6px;background:#c0c0c0;border-top:2px solid #fff;border-bottom:3px ridge #888;flex-wrap:wrap">
+    <a href="Home.dc.html" style="display:block;padding:3px 9px;border:2px outset #eee;background:#d4d0c8;color:#00008b;text-decoration:none;font:bold 12px Verdana,sans-serif">Home</a>
+    <span style="padding:3px 9px;border:2px inset #999;background:#ffffcc;font:bold 12px Verdana,sans-serif;color:#333">Machine Finder</span>
+    <a href="Tracker.dc.html" style="display:block;padding:3px 9px;border:2px outset #eee;background:#d4d0c8;color:#00008b;text-decoration:none;font:bold 12px Verdana,sans-serif">Mold Tracker</a>
+    <a href="Gallery.dc.html" style="display:block;padding:3px 9px;border:2px outset #eee;background:#d4d0c8;color:#00008b;text-decoration:none;font:bold 12px Verdana,sans-serif">Photo Gallery</a>
+    <a href="Submit.dc.html" style="display:block;padding:3px 9px;border:2px outset #eee;background:#d4d0c8;color:#00008b;text-decoration:none;font:bold 12px Verdana,sans-serif">Submit a Sighting</a>
+    <a href="History.dc.html" style="display:block;padding:3px 9px;border:2px outset #eee;background:#d4d0c8;color:#00008b;text-decoration:none;font:bold 12px Verdana,sans-serif">History</a>
+  </div>
+  <div data-screen-label="Machine Finder" style="padding:16px 20px">
+    <div style="font-family:'Comic Sans MS',cursive;font-size:26px;color:#b22222;margin-bottom:4px">&#128205; The Machine Finder</div>
+    <p style="margin:0 0 10px;font-size:15px;line-height:1.5"><b>30 spots</b> across America where you can still push the button and watch the magic happen. Spot one we missed? <a href="Submit.dc.html">Submit a sighting!</a></p>
+    <div style="border:2px dashed #00537a;background:#e8f4f8;padding:8px 10px;margin-bottom:12px;font:12px Verdana,sans-serif;line-height:1.6">
+      <b>Who runs these things?</b> Two family companies keep the whole fleet alive: <b>Mold-A-Rama&#174; Inc.</b> of Brookfield, IL services the Midwest / Texas / Tennessee machines, and <b>Unique Souvenirs Inc.</b> of Florida runs the ones branded <b>Mold-A-Matic&#8482;</b>, mostly around Florida. Different stickers on the front &mdash; same 1960s machines, same hot plastic smell.
+    </div>
+    <div data-screen-label="Mold Map" style="border:3px outset #ccc;background:#f1efe2;margin-bottom:16px">
+      <iframe src="mold-map.html" title="Map of Mold-A-Rama machine locations" style="display:block;width:100%;height:690px;border:none" scrolling="no"></iframe>
+    </div>
+    <div style="font-family:Verdana,sans-serif;font-size:14px;font-weight:bold;background:#000080;color:#ffff00;padding:4px 8px">&#9733; EVERY KNOWN MACHINE, STATE BY STATE</div>
+    <table style="width:100%;border-collapse:collapse;font-size:14px;margin-bottom:16px" border="1" cellpadding="4">
+      <tbody>
+      <tr style="background:#dcd8cc;font-family:Verdana,sans-serif;font-size:11px;font-weight:bold"><td style="width:26px;text-align:center">#</td><td>Venue</td><td>City</td><td>What to know</td></tr>
+      <tr style="background:#c8d8e8;font-family:Verdana,sans-serif;font-size:11px;font-weight:bold"><td colspan="4">ILLINOIS</td></tr>
+      <tr style="background:#ffffff"><td style="text-align:center">1</td><td><b>Brookfield Zoo</b></td><td>Brookfield</td><td>A dozen machines; home of the famous blue dolphin on a wave</td></tr>
+      <tr style="background:#fdf7df"><td style="text-align:center">2</td><td><b>Field Museum</b></td><td>Chicago</td><td>Dino central: T-Rex, Apatosaurus, Quetzalcoatlus, Bushman the gorilla</td></tr>
+      <tr style="background:#ffffff"><td style="text-align:center">3</td><td><b>Museum of Science &amp; Industry</b></td><td>Chicago</td><td>U-505 submarine, Pioneer Zephyr, baby chick</td></tr>
+      <tr style="background:#fdf7df"><td style="text-align:center">4</td><td><b>Volo Auto Museum</b></td><td>Volo</td><td>Movie cars + discontinued molds in the gift shop</td></tr>
+      <tr style="background:#c8d8e8;font-family:Verdana,sans-serif;font-size:11px;font-weight:bold"><td colspan="4">INDIANA</td></tr>
+      <tr style="background:#ffffff"><td style="text-align:center">5</td><td><b>The Children's Museum of Indianapolis</b></td><td>Indianapolis</td><td>World's biggest children's museum &mdash; <a href="Submit.dc.html">report the current molds!</a></td></tr>
+      <tr style="background:#fdf7df"><td style="text-align:center">6</td><td><b>Indiana Dinosaur Museum</b></td><td>South Bend</td><td>One of the newest stops on the circuit</td></tr>
+      <tr style="background:#c8d8e8;font-family:Verdana,sans-serif;font-size:11px;font-weight:bold"><td colspan="4">MICHIGAN</td></tr>
+      <tr style="background:#ffffff"><td style="text-align:center">7</td><td><b>The Henry Ford</b></td><td>Dearborn</td><td>Wienermobile, 1914 antique auto, Rosa Parks bus, Lincoln bust</td></tr>
+      <tr style="background:#fdf7df"><td style="text-align:center">8</td><td><b>Third Man Records</b></td><td>Detroit</td><td>Vinyl records AND hot plastic under one roof</td></tr>
+      <tr style="background:#c8d8e8;font-family:Verdana,sans-serif;font-size:11px;font-weight:bold"><td colspan="4">OHIO</td></tr>
+      <tr style="background:#ffffff"><td style="text-align:center">9</td><td><b>Children's Wonderland</b></td><td>Maumee</td><td>Christmas walk-through diorama; famous for its gold angel mold</td></tr>
+      <tr style="background:#fdf7df"><td style="text-align:center">10</td><td><b>Imagination Station</b></td><td>Toledo</td><td>Science center on the riverfront</td></tr>
+      <tr style="background:#c8d8e8;font-family:Verdana,sans-serif;font-size:11px;font-weight:bold"><td colspan="4">WISCONSIN</td></tr>
+      <tr style="background:#ffffff"><td style="text-align:center">11</td><td><b>Milwaukee County Zoo</b></td><td>Milwaukee</td><td>13 machines: bat, elephant, eagle, penguin, panther&hellip;</td></tr>
+      <tr style="background:#c8d8e8;font-family:Verdana,sans-serif;font-size:11px;font-weight:bold"><td colspan="4">TENNESSEE</td></tr>
+      <tr style="background:#fdf7df"><td style="text-align:center">12</td><td><b>Memphis Zoo</b> <span style="color:#ff0000;font-weight:bold;font-size:11px;animation:mor-blink 1s step-start infinite">NEW!</span></td><td>Memphis</td><td>Newest Mold-A-Rama&#174; Inc. venue &mdash; report what you find!</td></tr>
+      <tr style="background:#ffffff"><td style="text-align:center">13</td><td><b>Third Man Records</b></td><td>Nashville</td><td>Jack White keeps a machine right in the record shop</td></tr>
+      <tr style="background:#c8d8e8;font-family:Verdana,sans-serif;font-size:11px;font-weight:bold"><td colspan="4">TEXAS / OKLAHOMA / SOUTH CAROLINA</td></tr>
+      <tr style="background:#fdf7df"><td style="text-align:center">14</td><td><b>San Antonio Zoo</b></td><td>San Antonio, TX</td><td>Three green monkeys on a single mold</td></tr>
+      <tr style="background:#ffffff"><td style="text-align:center">15</td><td><b>Oklahoma City Zoo</b></td><td>Oklahoma City, OK</td><td><a href="Submit.dc.html">Report the current molds!</a></td></tr>
+      <tr style="background:#fdf7df"><td style="text-align:center">16</td><td><b>WonderWorks</b></td><td>Myrtle Beach, SC</td><td>The upside-down building</td></tr>
+      <tr style="background:#c8d8e8;font-family:Verdana,sans-serif;font-size:11px;font-weight:bold"><td colspan="4">FLORIDA &mdash; MOLD-A-MATIC&#8482; COUNTRY</td></tr>
+      <tr style="background:#ffffff"><td style="text-align:center">17</td><td><b>Boggy Creek Airboat Adventures</b></td><td>Kissimmee</td><td>Airboats + gators</td></tr>
+      <tr style="background:#fdf7df"><td style="text-align:center">18</td><td><b>Busch Gardens Tampa Bay</b></td><td>Tampa</td><td>Safari animals</td></tr>
+      <tr style="background:#ffffff"><td style="text-align:center">19</td><td><b>Central Florida Zoo</b></td><td>Sanford</td><td><a href="Submit.dc.html">Report the current molds!</a></td></tr>
+      <tr style="background:#fdf7df"><td style="text-align:center">20</td><td><b>Gatorland</b></td><td>Orlando</td><td>Gators, naturally</td></tr>
+      <tr style="background:#ffffff"><td style="text-align:center">21</td><td><b>ICON Park</b></td><td>Orlando</td><td>By the big wheel</td></tr>
+      <tr style="background:#fdf7df"><td style="text-align:center">22</td><td><b>Manatee Viewing Center</b></td><td>Apollo Beach</td><td>A manatee mold at a power plant. America!</td></tr>
+      <tr style="background:#ffffff"><td style="text-align:center">23</td><td><b>The Vinoy Resort</b></td><td>St. Petersburg</td><td>Possibly the fanciest Mold-A-Rama address in America</td></tr>
+      <tr style="background:#fdf7df"><td style="text-align:center">24</td><td><b>Weeki Wachee Springs</b></td><td>Weeki Wachee</td><td>Mermaid on a wave + mermaid on a seahorse</td></tr>
+      <tr style="background:#ffffff"><td style="text-align:center">25</td><td><b>WonderWorks</b></td><td>Orlando</td><td>The other upside-down building</td></tr>
+      <tr style="background:#fdf7df"><td style="text-align:center">26</td><td><b>Zoo Miami</b></td><td>Miami</td><td>Southernmost machines in the country</td></tr>
+      <tr style="background:#ffffff"><td style="text-align:center">27</td><td><b>ZooWorld</b></td><td>Panama City Beach</td><td><a href="Submit.dc.html">Report the current molds!</a></td></tr>
+      <tr style="background:#c8d8e8;font-family:Verdana,sans-serif;font-size:11px;font-weight:bold"><td colspan="4">OUT WEST</td></tr>
+      <tr style="background:#fdf7df"><td style="text-align:center">28</td><td><b>Pinball Hall of Fame</b></td><td>Las Vegas, NV</td><td>Between the pinball machines. Vegas, baby</td></tr>
+      <tr style="background:#ffffff"><td style="text-align:center">29</td><td><b>Los Angeles Central Library</b></td><td>Los Angeles, CA</td><td>A machine in a library!</td></tr>
+      <tr style="background:#fdf7df"><td style="text-align:center">30</td><td><b>Space Needle</b></td><td>Seattle, WA</td><td>Gold Space Needle mold &mdash; where it all began in 1962</td></tr>
+      </tbody>
+    </table>
+    <div style="border:2px dashed #b22222;background:#fffbe6;padding:8px 10px;margin-bottom:16px;font:12px Verdana,sans-serif;line-height:1.6">
+      <b>&#128269; MISSING FROM THE MAP:</b> fans also report machines at <b>The Maples' Tree</b> and <b>Zero Gravity Adventure Park</b> &mdash; but we can't pin them down! Know where they are? <a href="Submit.dc.html">Send us the intel</a> and earn eternal mold-glory.
+    </div>
+    <div data-screen-label="Fan Sightings" style="border:3px double #b22222;background:#fffbe6;padding:10px 12px">
+      <div style="font-family:'Comic Sans MS',cursive;font-size:18px;color:#b22222;margin-bottom:6px">&#128064; Fan-reported sightings</div>
+      <sc-if value="{{ hasSightings }}" hint-placeholder-val="{{ false }}">
+        <table style="width:100%;border-collapse:collapse;font-size:14px" border="1" cellpadding="5">
+          <tbody>
+          <tr style="background:#dcd8cc;font-family:Verdana,sans-serif;font-size:11px;font-weight:bold"><td>Venue</td><td>City, State</td><td>What they saw</td><td>Reported by</td></tr>
+          <sc-for list="{{ sightings }}" as="s" hint-placeholder-count="1">
+            <tr style="background:#ffffff"><td><b>{{ s.venue }}</b></td><td>{{ s.city }}</td><td>{{ s.molds }}</td><td>{{ s.name }}</td></tr>
+          </sc-for>
+          </tbody>
+        </table>
+      </sc-if>
+      <sc-if value="{{ noSightings }}" hint-placeholder-val="{{ true }}">
+        <div style="font:13px Verdana,sans-serif;color:#555">No fan sightings yet &mdash; be the first! Head to <a href="Submit.dc.html">Submit a Sighting</a> and your report shows up right here.</div>
+      </sc-if>
+    </div>
+  </div>
+  <div data-screen-label="Footer" style="border-top:4px ridge #a8b4ba;background:#dcd8cc;padding:10px 20px;text-align:center;font:11px Verdana,sans-serif;color:#555;line-height:1.5">
+    Venue list based on fan sightings &mdash; machines move, so call ahead before a road trip!<br />This is an unofficial fan page. Mold-A-Rama&#174; is a registered trademark of Mold-A-Rama Inc.
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { sightings: [] };
+  componentDidMount() {
+    try {
+      const s = JSON.parse(localStorage.getItem('mor_sightings') || '[]');
+      if (Array.isArray(s)) this.setState({ sightings: s });
+    } catch (e) {}
+  }
+  renderVals() {
+    const s = this.state.sightings;
+    return { sightings: s, hasSightings: s.length > 0, noSightings: s.length === 0 };
+  }
+}
+</script>
+</body>
+</html>

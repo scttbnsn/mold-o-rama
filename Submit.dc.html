@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0;background-color:#007878;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.06) 0 2px,transparent 2px 14px)}
+a{color:#0000ee}a:visited{color:#551a8b}a:hover{color:#ff2200}
+@keyframes mor-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+</style>
+<script src="./image-slot.js"></script>
+</helmet>
+<div style="width:810px;margin:18px auto;border:4px ridge #a8b4ba;background:#f1efe2;font-family:'Times New Roman',Times,serif;color:#1a1a1a">
+  <div data-screen-label="Header" style="background:#0b0b0b;padding:16px 10px 12px;text-align:center">
+    <div style="color:#e8e8e8;font-family:Verdana,sans-serif;font-size:11px;letter-spacing:4px;margin-bottom:6px">NOW YOU CAN HELP THE AMAZING</div>
+    <div style="font-family:Impact,'Arial Black',sans-serif;font-size:52px;letter-spacing:2px;line-height:1"><span style="color:#4f9dff">M</span><span style="color:#ff4136">O</span><span style="color:#ffdc00">L</span><span style="color:#4f9dff">D</span><span style="color:#e8e8e8">-</span><span style="color:#ff4136">O</span><span style="color:#e8e8e8">-</span><span style="color:#ffdc00">R</span><span style="color:#4f9dff">A</span><span style="color:#ff4136">M</span><span style="color:#ffdc00">A</span></div>
+    <div style="color:#ffdc00;font-family:Verdana,sans-serif;font-size:11px;letter-spacing:3px;margin-top:8px">&#9733; THE UNOFFICIAL FAN PAGE &#9733; SUBMIT A SIGHTING &#9733;</div>
+  </div>
+  <div data-screen-label="Nav" style="display:flex;gap:4px;padding:6px;background:#c0c0c0;border-top:2px solid #fff;border-bottom:3px ridge #888;flex-wrap:wrap">
+    <a href="Home.dc.html" style="display:block;padding:3px 9px;border:2px outset #eee;background:#d4d0c8;color:#00008b;text-decoration:none;font:bold 12px Verdana,sans-serif">Home</a>
+    <a href="Locations.dc.html" style="display:block;padding:3px 9px;border:2px outset #eee;background:#d4d0c8;color:#00008b;text-decoration:none;font:bold 12px Verdana,sans-serif">Machine Finder</a>
+    <a href="Tracker.dc.html" style="display:block;padding:3px 9px;border:2px outset #eee;background:#d4d0c8;color:#00008b;text-decoration:none;font:bold 12px Verdana,sans-serif">Mold Tracker</a>
+    <a href="Gallery.dc.html" style="display:block;padding:3px 9px;border:2px outset #eee;background:#d4d0c8;color:#00008b;text-decoration:none;font:bold 12px Verdana,sans-serif">Photo Gallery</a>
+    <span style="padding:3px 9px;border:2px inset #999;background:#ffffcc;font:bold 12px Verdana,sans-serif;color:#333">Submit a Sighting</span>
+    <a href="History.dc.html" style="display:block;padding:3px 9px;border:2px outset #eee;background:#d4d0c8;color:#00008b;text-decoration:none;font:bold 12px Verdana,sans-serif">History</a>
+  </div>
+  <div data-screen-label="Submit Form" style="padding:16px 20px">
+    <div style="font-family:'Comic Sans MS',cursive;font-size:26px;color:#b22222;margin-bottom:4px">&#128238; Submit a Sighting</div>
+    <p style="margin:0 0 12px;font-size:15px;line-height:1.5">Found a machine we don't list? New mold in an old machine? Report it here and it shows up on the <a href="Locations.dc.html">Machine Finder</a> for all fellow mold-heads to see.</p>
+    <sc-if value="{{ justSubmitted }}" hint-placeholder-val="{{ false }}">
+      <div style="border:3px double #006400;background:#eaffea;padding:10px 12px;margin-bottom:12px;font:bold 13px Verdana,sans-serif;color:#006400">
+        &#127881; SIGHTING RECEIVED!! Thank you for your service to the mold community. See it live on the <a href="Locations.dc.html">Machine Finder</a>.
+      </div>
+    </sc-if>
+    <form onSubmit="{{ submit }}" style="border:3px outset #ccc;background:#ffffff;padding:14px 16px;display:grid;grid-template-columns:170px 1fr;gap:10px 12px;align-items:center;font:13px Verdana,sans-serif">
+      <label for="f-venue" style="font-weight:bold;text-align:right">Venue name: *</label>
+      <input id="f-venue" name="venue" required="required" placeholder="e.g. Toledo Zoo" style="padding:4px;border:2px inset #999;font:14px 'Courier New',monospace" />
+      <label for="f-city" style="font-weight:bold;text-align:right">City, State: *</label>
+      <input id="f-city" name="city" required="required" placeholder="e.g. Toledo, OH" style="padding:4px;border:2px inset #999;font:14px 'Courier New',monospace" />
+      <label for="f-molds" style="font-weight:bold;text-align:right">What did you see?</label>
+      <textarea id="f-molds" name="molds" rows="3" placeholder="e.g. 2 machines by the gift shop — a red hippo and a green gator" style="padding:4px;border:2px inset #999;font:14px 'Courier New',monospace;resize:vertical"></textarea>
+      <label for="f-name" style="font-weight:bold;text-align:right">Your handle:</label>
+      <input id="f-name" name="name" placeholder="e.g. PlasticPete_77" style="padding:4px;border:2px inset #999;font:14px 'Courier New',monospace" />
+      <span style="font-weight:bold;text-align:right;align-self:start;padding-top:4px">Photo (optional):</span>
+      <div>
+        <div style="width:260px;height:170px"><image-slot id="sighting-photo" shape="rect" placeholder="Drop your machine photo"></image-slot></div>
+        <div style="font:11px 'Courier New',monospace;color:#777;margin-top:4px">Also add it to the <a href="Gallery.dc.html">Photo Gallery</a>!</div>
+      </div>
+      <span></span>
+      <div><button type="submit" style="font:bold 13px Verdana,sans-serif;padding:6px 18px;border:3px outset #eee;background:#d4d0c8;cursor:pointer;display:inline-flex;align-items:center;gap:8px"><span style="font-size:26px;line-height:1">&#9993;</span> SEND IT IN!</button></div>
+    </form>
+    <sc-if value="{{ hasReports }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top:14px;border:3px double #b22222;background:#fffbe6;padding:10px 12px">
+        <div style="font-family:'Comic Sans MS',cursive;font-size:18px;color:#b22222;margin-bottom:6px">Your reports so far</div>
+        <table style="width:100%;border-collapse:collapse;font-size:14px" border="1" cellpadding="5">
+          <tbody>
+          <tr style="background:#dcd8cc;font-family:Verdana,sans-serif;font-size:11px;font-weight:bold"><td>Venue</td><td>City, State</td><td>What you saw</td><td></td></tr>
+          <sc-for list="{{ reports }}" as="r" hint-placeholder-count="1">
+            <tr style="background:#ffffff"><td><b>{{ r.venue }}</b></td><td>{{ r.city }}</td><td>{{ r.molds }}</td><td style="text-align:center"><button onClick="{{ r.remove }}" style="font:11px Verdana,sans-serif;border:2px outset #eee;background:#d4d0c8;cursor:pointer">retract</button></td></tr>
+          </sc-for>
+          </tbody>
+        </table>
+      </div>
+    </sc-if>
+  </div>
+  <div data-screen-label="Footer" style="border-top:4px ridge #a8b4ba;background:#dcd8cc;padding:10px 20px;text-align:center;font:11px Verdana,sans-serif;color:#555;line-height:1.5">
+    The webmaster reviews all sightings personally (he has no life).<br />This is an unofficial fan page. Mold-A-Rama&#174; is a registered trademark of Mold-A-Rama Inc.
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { reports: [], justSubmitted: false };
+  componentDidMount() {
+    try {
+      const s = JSON.parse(localStorage.getItem('mor_sightings') || '[]');
+      if (Array.isArray(s)) this.setState({ reports: s });
+    } catch (e) {}
+  }
+  save(reports, justSubmitted) {
+    localStorage.setItem('mor_sightings', JSON.stringify(reports));
+    this.setState({ reports, justSubmitted });
+  }
+  renderVals() {
+    return {
+      justSubmitted: this.state.justSubmitted,
+      hasReports: this.state.reports.length > 0,
+      reports: this.state.reports.map((r, i) => ({ ...r,
+        remove: () => this.save(this.state.reports.filter((_, j) => j !== i), false) })),
+      submit: (e) => {
+        e.preventDefault();
+        const f = e.target.elements;
+        const rep = {
+          venue: f.venue.value.trim(), city: f.city.value.trim(),
+          molds: f.molds.value.trim() || '(no details)', name: f.name.value.trim() || 'anonymous mold-head'
+        };
+        if (!rep.venue || !rep.city) return;
+        this.save([...this.state.reports, rep], true);
+        e.target.reset();
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

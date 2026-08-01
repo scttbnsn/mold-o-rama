@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0;background-color:#007878;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.06) 0 2px,transparent 2px 14px)}
+a{color:#0000ee}a:visited{color:#551a8b}a:hover{color:#ff2200}
+@keyframes mor-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+</style>
+</helmet>
+<div style="width:810px;margin:18px auto;border:4px ridge #a8b4ba;background:#f1efe2;font-family:'Times New Roman',Times,serif;color:#1a1a1a">
+  <div data-screen-label="Header" style="background:#0b0b0b;padding:16px 10px 12px;text-align:center">
+    <div style="color:#e8e8e8;font-family:Verdana,sans-serif;font-size:11px;letter-spacing:4px;margin-bottom:6px">NOW YOU CAN OPERATE THE AMAZING</div>
+    <div style="font-family:Impact,'Arial Black',sans-serif;font-size:52px;letter-spacing:2px;line-height:1"><span style="color:#4f9dff">M</span><span style="color:#ff4136">O</span><span style="color:#ffdc00">L</span><span style="color:#4f9dff">D</span><span style="color:#e8e8e8">-</span><span style="color:#ff4136">O</span><span style="color:#e8e8e8">-</span><span style="color:#ffdc00">R</span><span style="color:#4f9dff">A</span><span style="color:#ff4136">M</span><span style="color:#ffdc00">A</span></div>
+    <div style="color:#ffdc00;font-family:Verdana,sans-serif;font-size:11px;letter-spacing:3px;margin-top:8px">&#9733; THE UNOFFICIAL FAN PAGE &#9733; MOLD TRACKER &#9733;</div>
+  </div>
+  <div data-screen-label="Nav" style="display:flex;gap:4px;padding:6px;background:#c0c0c0;border-top:2px solid #fff;border-bottom:3px ridge #888;flex-wrap:wrap">
+    <a href="Home.dc.html" style="display:block;padding:3px 9px;border:2px outset #eee;background:#d4d0c8;color:#00008b;text-decoration:none;font:bold 12px Verdana,sans-serif">Home</a>
+    <a href="Locations.dc.html" style="display:block;padding:3px 9px;border:2px outset #eee;background:#d4d0c8;color:#00008b;text-decoration:none;font:bold 12px Verdana,sans-serif">Machine Finder</a>
+    <span style="padding:3px 9px;border:2px inset #999;background:#ffffcc;font:bold 12px Verdana,sans-serif;color:#333">Mold Tracker</span>
+    <a href="Gallery.dc.html" style="display:block;padding:3px 9px;border:2px outset #eee;background:#d4d0c8;color:#00008b;text-decoration:none;font:bold 12px Verdana,sans-serif">Photo Gallery</a>
+    <a href="Submit.dc.html" style="display:block;padding:3px 9px;border:2px outset #eee;background:#d4d0c8;color:#00008b;text-decoration:none;font:bold 12px Verdana,sans-serif">Submit a Sighting</a>
+    <a href="History.dc.html" style="display:block;padding:3px 9px;border:2px outset #eee;background:#d4d0c8;color:#00008b;text-decoration:none;font:bold 12px Verdana,sans-serif">History</a>
+  </div>
+  <div data-screen-label="Tracker" style="padding:16px 20px">
+    <div style="font-family:'Comic Sans MS',cursive;font-size:26px;color:#b22222;margin-bottom:4px">&#9989; The Official Unofficial Mold Tracker</div>
+    <p style="margin:0 0 12px;font-size:15px;line-height:1.5">Check off every mold you own. Your collection is saved on your computer (very high tech). Dig through that shoebox and be honest!!</p>
+    <div style="border:3px double #00008b;background:#e8f0ff;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:16px">
+      <div style="font-family:'Courier New',monospace;font-size:14px;font-weight:bold;text-align:center">YOU OWN<br /><span style="font-size:32px;color:#b22222">{{ ownedCount }}</span> / {{ totalCount }}</div>
+      <div style="flex:1">
+        <div style="display:flex;gap:2px;background:#fff;border:2px inset #999;padding:3px">
+          <sc-for list="{{ barCells }}" as="cell" hint-placeholder-count="20">
+            <span style="flex:1;height:16px;background:{{ cell }}"></span>
+          </sc-for>
+        </div>
+        <div style="font:bold 13px Verdana,sans-serif;margin-top:5px">Collector rank: <span style="color:#b22222">{{ rank }}</span></div>
+      </div>
+      <button onClick="{{ resetAll }}" style="font:bold 11px Verdana,sans-serif;padding:4px 10px;border:2px outset #eee;background:#d4d0c8;cursor:pointer">Reset :(</button>
+    </div>
+    <sc-for list="{{ groups }}" as="g" hint-placeholder-count="3">
+      <div style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;background:#000080;color:#ffff00;padding:4px 8px;font-family:Verdana,sans-serif;font-size:13px;font-weight:bold">
+          <span>&#9733; {{ g.venue }}</span>
+          <span style="font-family:'Courier New',monospace;font-size:12px">{{ g.count }} / {{ g.total }}</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 16px;border:1px solid #999;border-top:none;background:#ffffff;padding:8px 10px">
+          <sc-for list="{{ g.items }}" as="item" hint-placeholder-count="4">
+            <label style="display:flex;gap:7px;align-items:center;font-size:15px;cursor:pointer;padding:2px 0">
+              <input type="checkbox" checked="{{ item.checked }}" onChange="{{ item.onToggle }}" />
+              <span>{{ item.name }}</span>
+              <span style="color:#888;font-size:12px;font-family:Verdana,sans-serif">({{ item.color }})</span>
+            </label>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+    <div style="border:2px dashed #b22222;background:#fffbe6;padding:8px 10px;font:12px Verdana,sans-serif;line-height:1.6">
+      <b>Own a mold we don't list?</b> Molds rotate all the time (holiday specials! color changes!). <a href="Submit.dc.html">Submit a sighting</a> and we'll add it to the master list.
+    </div>
+  </div>
+  <div data-screen-label="Footer" style="border-top:4px ridge #a8b4ba;background:#dcd8cc;padding:10px 20px;text-align:center;font:11px Verdana,sans-serif;color:#555;line-height:1.5">
+    Pro collector tip: hold it upside-down until it cools, or suffer the drips.<br />This is an unofficial fan page. Mold-A-Rama&#174; is a registered trademark of Mold-A-Rama Inc.
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { owned: {} };
+  static MOLDS = [
+    ['Field Museum — Chicago, IL', [
+      ['trex', 'T-Rex', 'red'], ['apato', 'Apatosaurus', 'green'], ['quetz', 'Quetzalcoatlus', 'light blue'],
+      ['stego', 'Stegosaurus', 'orange'], ['bushman', 'Bushman the Gorilla', 'brown']]],
+    ['Museum of Science & Industry — Chicago, IL', [
+      ['u505', 'U-505 Submarine', 'gray'], ['zephyr', 'Pioneer Zephyr', 'blue'],
+      ['chick', 'Baby Chick', 'yellow'], ['tractor', 'Farm Tractor', 'green']]],
+    ['Brookfield Zoo — Brookfield, IL', [
+      ['dolphin', 'Dolphin on a Wave', 'blue'], ['gorilla', 'Gorilla', 'black'], ['lion', 'Lion', 'yellow'],
+      ['pbear', 'Polar Bear', 'white'], ['bison', 'Bison', 'brown']]],
+    ['The Henry Ford — Dearborn, MI', [
+      ['wiener', '1952 Wienermobile', 'orange'], ['auto', '1914 Antique Auto', 'black'],
+      ['rosabus', 'Rosa Parks Bus', 'green'], ['lincoln', 'Abraham Lincoln Bust', 'white'], ['loco', 'Locomotive', 'red']]],
+    ['Milwaukee County Zoo — Milwaukee, WI', [
+      ['bat', 'Bat', 'black'], ['eleph', 'Elephant', 'gray'], ['eagle', 'Bald Eagle', 'brown'],
+      ['penguin', 'Penguin', 'blue'], ['panther', 'Panther', 'black']]],
+    ['San Antonio Zoo — San Antonio, TX', [
+      ['flamingo', 'Flamingo', 'pink'], ['giraffe', 'Giraffe', 'orange'],
+      ['monkeys', 'Three Green Monkeys', 'green'], ['saeleph', 'Elephant', 'gray']]],
+    ['Florida Mold-A-Matic™ circuit', [
+      ['merwave', 'Mermaid on a Wave', 'blue'], ['merhorse', 'Mermaid on a Seahorse', 'green'],
+      ['gator', 'Gator', 'green'], ['manatee', 'Manatee', 'gray']]],
+    ['Roadside rarities', [
+      ['needle', 'Space Needle', 'gold'], ['angel', "Christmas Angel (Children's Wonderland)", 'gold']]]
+  ];
+  componentDidMount() {
+    try {
+      const o = JSON.parse(localStorage.getItem('mor_molds') || '{}');
+      if (o && typeof o === 'object') this.setState({ owned: o });
+    } catch (e) {}
+  }
+  save(owned) { localStorage.setItem('mor_molds', JSON.stringify(owned)); this.setState({ owned }); }
+  renderVals() {
+    const owned = this.state.owned;
+    let total = 0, ownedCount = 0;
+    const groups = Component.MOLDS.map(([venue, molds]) => {
+      const items = molds.map(([id, name, color]) => {
+        const checked = !!owned[id];
+        return { name, color, checked, onToggle: () => {
+          const next = { ...this.state.owned };
+          if (next[id]) delete next[id]; else next[id] = true;
+          this.save(next);
+        }};
+      });
+      const count = items.filter(i => i.checked).length;
+      total += items.length; ownedCount += count;
+      return { venue, items, count, total: items.length };
+    });
+    const filled = total ? Math.round((ownedCount / total) * 20) : 0;
+    const barCells = Array.from({ length: 20 }, (_, i) => i < filled ? '#0000aa' : '#ffffff');
+    const rank = ownedCount === 0 ? 'Window Shopper' : ownedCount < 5 ? 'Button Pusher'
+      : ownedCount < 10 ? 'Souvenir Scout' : ownedCount < 17 ? 'Hot Plastic Hero'
+      : ownedCount < 25 ? 'Certified Mold-Head' : 'PLASTIC LEGEND';
+    return { groups, ownedCount, totalCount: total, barCells, rank,
+      resetAll: () => { if (confirm('Really wipe your whole collection??')) this.save({}); } };
+  }
+}
+</script>
+</body>
+</html>
