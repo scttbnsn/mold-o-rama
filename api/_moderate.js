@@ -1,12 +1,15 @@
-// Cheap AI relevance check for uploaded photos (claude-haiku-4-5, ~$0.002/image).
-// Fails OPEN: any missing key, unsupported format, or API error counts as
-// "not checked" and the photo is allowed through — moderation must never
+// Cheap AI relevance check for uploaded photos, routed through the Vercel AI
+// Gateway (OIDC auth in deployed functions, or AI_GATEWAY_API_KEY if set).
+// Default model is a budget vision model (~$0.0001/image); override with the
+// MODERATION_MODEL env var, e.g. "anthropic/claude-haiku-4.5".
+// Fails OPEN: any missing auth, unsupported format, or API error counts as
+// "not checked" and the photo is allowed through - moderation must never
 // break the site. Underscore prefix keeps this out of Vercel's function routes.
-import Anthropic from '@anthropic-ai/sdk';
+import { generateText, Output, jsonSchema } from 'ai';
 
 const SUPPORTED = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
-const VERDICT_SCHEMA = {
+const VERDICT_SCHEMA = jsonSchema({
   type: 'object',
   properties: {
     relevant: { type: 'boolean' },
@@ -14,7 +17,7 @@ const VERDICT_SCHEMA = {
   },
   required: ['relevant', 'reason'],
   additionalProperties: false
-};
+});
 
 const PROMPT =
   'Decide whether this image belongs on a family-friendly fan site for Mold-A-Rama / ' +
@@ -28,10 +31,7 @@ const PROMPT =
 
 // Returns { checked, relevant, reason }. relevant is only meaningful when checked=true.
 export async function moderatePhoto(dataUrl) {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return { checked: false, relevant: true, reason: 'no api key configured' };
-  }
-  const match = /^data:([^;]+);base64,(.*)$/s.exec(dataUrl || '');
+  const match = /^data:([^;]+);base64,/.exec(dataUrl || '');
   if (!match) return { checked: false, relevant: true, reason: 'unparseable data url' };
   const mediaType = match[1] === 'image/jpg' ? 'image/jpeg' : match[1];
   if (!SUPPORTED.includes(mediaType)) {
@@ -39,23 +39,21 @@ export async function moderatePhoto(dataUrl) {
   }
 
   try {
-    const client = new Anthropic();
-    const msg = await client.messages.create({
-      model: 'claude-haiku-4-5',
-      max_tokens: 300,
-      output_config: { format: { type: 'json_schema', schema: VERDICT_SCHEMA } },
+    const result = await generateText({
+      model: process.env.MODERATION_MODEL || 'google/gemini-2.5-flash-lite',
+      maxOutputTokens: 300,
+      output: Output.object({ schema: VERDICT_SCHEMA }),
       messages: [
         {
           role: 'user',
           content: [
-            { type: 'image', source: { type: 'base64', media_type: mediaType, data: match[2] } },
+            { type: 'file', mediaType, data: dataUrl },
             { type: 'text', text: PROMPT }
           ]
         }
       ]
     });
-    const text = msg.content.find((b) => b.type === 'text');
-    const verdict = JSON.parse(text.text);
+    const verdict = result.output;
     return { checked: true, relevant: !!verdict.relevant, reason: String(verdict.reason || '') };
   } catch (err) {
     console.error('photo moderation failed open:', err && err.message);
