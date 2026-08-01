@@ -17,16 +17,24 @@ export default async function handler(req, res) {
       return;
     }
 
+    let photoUrl = null;
+    const photo = body.photo;
+    if (typeof photo === 'string' && photo.indexOf('data:image/') === 0 && photo.length < 3_000_000) {
+      photoUrl = await uploadSightingPhoto(photo);
+    }
+
     const title = `Sighting: ${venue} (${city})`;
-    const bodyMd = [
+    const bodyLines = [
       `**Venue:** ${venue}`,
       `**City/State:** ${city}`,
       `**What was seen:** ${molds}`,
       `**Reported by:** ${name}`,
-      '',
-      '---',
-      'Submitted via the Mold-O-Rama fan site',
-    ].join('\n');
+    ];
+    if (photoUrl) {
+      bodyLines.push('**Photo:**', `![sighting photo](${photoUrl})`);
+    }
+    bodyLines.push('', '---', 'Submitted via the Mold-O-Rama fan site');
+    const bodyMd = bodyLines.join('\n');
 
     const ghRes = await fetch(`https://api.github.com/repos/${process.env.GITHUB_REPO}/issues`, {
       method: 'POST',
@@ -51,9 +59,73 @@ export default async function handler(req, res) {
     }
 
     const issue = await ghRes.json();
+    await cleanupSightingPhotoState();
     res.status(200).json({ ok: true, url: issue.html_url });
   } catch (err) {
     console.error('submit handler error:', err);
     res.status(500).json({ ok: false });
   }
+}
+
+async function uploadSightingPhoto(dataUrl) {
+  try {
+    const match = /^data:([^;]+);base64,(.*)$/s.exec(dataUrl);
+    if (!match) return null;
+    const contentType = match[1];
+    const bytes = Buffer.from(match[2], 'base64');
+    const ext = contentType.split('/')[1] || 'webp';
+    const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+
+    const uploadRes = await fetch(
+      `${process.env.SUPABASE_URL}/storage/v1/object/sightings/${filename}`,
+      {
+        method: 'POST',
+        headers: {
+          apikey: process.env.SUPABASE_ANON_KEY,
+          Authorization: 'Bearer ' + process.env.SUPABASE_ANON_KEY,
+          'Content-Type': contentType,
+        },
+        body: bytes,
+      }
+    );
+
+    if (!uploadRes.ok) {
+      console.error('sighting photo upload failed:', uploadRes.status, await uploadRes.text());
+      return null;
+    }
+
+    return `${process.env.SUPABASE_URL}/storage/v1/object/public/sightings/${filename}`;
+  } catch (err) {
+    console.error('sighting photo upload error:', err);
+    return null;
+  }
+}
+
+// Best-effort: once a sighting photo has been uploaded to storage and
+// attached to the issue, its copy in the shared photo_state row (dropped
+// via the Submit page's image-slot) is no longer needed. Any failure here
+// is swallowed — it must never fail the submission.
+async function cleanupSightingPhotoState() {
+  try {
+    const headers = {
+      apikey: process.env.SUPABASE_ANON_KEY,
+      Authorization: 'Bearer ' + process.env.SUPABASE_ANON_KEY,
+      'Content-Type': 'application/json',
+    };
+    const getRes = await fetch(
+      `${process.env.SUPABASE_URL}/rest/v1/photo_state?id=eq.1&select=state`,
+      { headers }
+    );
+    if (!getRes.ok) return;
+    const rows = await getRes.json();
+    const state = rows[0] && rows[0].state;
+    if (!state || !('sighting-photo' in state)) return;
+    const next = { ...state };
+    delete next['sighting-photo'];
+    await fetch(`${process.env.SUPABASE_URL}/rest/v1/photo_state?id=eq.1`, {
+      method: 'PATCH',
+      headers,
+      body: JSON.stringify({ state: next, updated_at: new Date().toISOString() }),
+    });
+  } catch (err) {}
 }

@@ -13,6 +13,7 @@ body{margin:0;background-color:#007878;background-image:repeating-linear-gradien
 a{color:#0000ee}a:visited{color:#551a8b}a:hover{color:#ff2200}
 @keyframes mor-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
 </style>
+<script src="./photo-sync.js"></script>
 <script src="./image-slot.js"></script>
 </helmet>
 <div style="width:810px;margin:18px auto;border:4px ridge #a8b4ba;background:#f1efe2;font-family:'Times New Roman',Times,serif;color:#1a1a1a">
@@ -112,11 +113,18 @@ class Component extends DCLogic {
         if (!rep.venue || !rep.city) return;
         const form = e.target;
         this.setState({ sending: true, submitError: false });
+        let photo = null;
+        try {
+          const slot = document.getElementById('sighting-photo');
+          const img = slot && slot.shadowRoot && slot.shadowRoot.querySelector('.frame img');
+          const src = img && img.getAttribute('src');
+          if (src && src.indexOf('data:image/') === 0) photo = src;
+        } catch (e) {}
         try {
           const res = await fetch('/api/submit', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(rep)
+            body: JSON.stringify(photo !== null ? { ...rep, photo } : rep)
           });
           const body = await res.json().catch(() => ({}));
           if (!res.ok || !body.ok) throw new Error((body && body.error) || 'submit failed');
